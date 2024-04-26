@@ -18,7 +18,20 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 from gestion_etudiants.views import StudentViewSet
 
+# Créer un routeur
 router = DefaultRouter()
+
+# Enregistrer StudentViewSet avec le routeur, en spécifiant le préfixe et le basename
 router.register(r'students', StudentViewSet, basename='student')
 
-urlpatterns = router.urls
+# Définir les URLs personnalisées en utilisant le routeur
+urlpatterns = [
+    # Liste tous les étudiants (GET) et crée un nouvel étudiant (POST)
+    path('students/', StudentViewSet.as_view({'get': 'list', 'post': 'create'}), name='student-list'),
+    # Récupère, met à jour ou supprime un étudiant spécifique par ID (GET, PUT, DELETE)
+    path('students/<int:pk>/', StudentViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='student-detail'),
+]
+
+# Ajouter les URLs générées par le routeur au urlpatterns
+urlpatterns += router.urls
+
