@@ -4,41 +4,30 @@ from rest_framework import status
 from .models import Student
 from .serializers import StudentSerializer
 
-class StudentViewSet(viewsets.ViewSet):
-    def list(self, request):
-        # Récupérer tous les étudiants depuis la base de données
-        queryset = Student.objects.all()
-        serializer = StudentSerializer(queryset, many=True)
-        return Response(serializer.data)
+class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()   # Récupère tous les objets Student de la base de données
+    serializer_class = StudentSerializer  # Utilise le serializer StudentSerializer pour la sérialisation
 
-    def create(self, request):
-        # Créer un nouvel étudiant à partir des données fournies
-        serializer = StudentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def retrieve(self, request, pk=None):
-        # Récupérer un étudiant spécifique par son ID
-        queryset = Student.objects.all()
+        queryset = self.get_queryset()
         student = queryset.get(pk=pk)
-        serializer = StudentSerializer(student)
+        serializer = self.get_serializer(student)
         return Response(serializer.data)
 
     def update(self, request, pk=None):
-        # Mettre à jour les données d'un étudiant existant
-        queryset = Student.objects.all()
-        student = queryset.get(pk=pk)
-        serializer = StudentSerializer(student, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
 
     def destroy(self, request, pk=None):
-        # Supprimer un étudiant spécifique par son ID
-        queryset = Student.objects.all()
-        student = queryset.get(pk=pk)
-        student.delete()
+        instance = self.get_object()
+        self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
