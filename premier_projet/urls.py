@@ -18,12 +18,7 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 from gestion_etudiants.views import StudentViewSet
 
-# Créer un routeur
 router = DefaultRouter()
-
-# Enregistrer StudentViewSet avec le routeur, en spécifiant le préfixe et le basename
 router.register(r'students', StudentViewSet, basename='student')
 
-# Ajouter les URLs générées par le routeur au urlpatterns
 urlpatterns = router.urls
-
