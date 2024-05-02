@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Student
@@ -38,3 +39,11 @@ class StudentViewSet(viewsets.ModelViewSet):
         student = get_object_or_404(Student, id=id)
         student.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def search_by_name(self, request, name=None):
+        if name:
+            students = Student.objects.filter(name__icontains=name)
+            serializer = StudentSerializer(students, many=True)
+            return Response(serializer.data)
+        else:
+            return Response("Please provide a name parameter in the URL", status=status.HTTP_400_BAD_REQUEST)
