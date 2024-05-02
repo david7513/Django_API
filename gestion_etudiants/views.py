@@ -19,20 +19,28 @@ class StudentViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-    def retrieve(self, request, pk=None, *args, **kwargs):
+    def retrieve(self, request, id=None, *args, **kwargs):
         queryset = self.get_queryset()
-        student = queryset.get(pk=pk)
+        student = queryset.get(id=id)
         serializer = self.get_serializer(student)
         return Response(serializer.data)
 
-    def update(self, request, pk=None, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data)
+    def update(self, request, id=None):
+        try:
+            student = self.get_object(id=id)
+        except Student.DoesNotExist:
+            return Response({"message": "Étudiant introuvable"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.get_serializer(student, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
 
-    def destroy(self, request, pk=None, *args, **kwargs):
-        instance = self.get_object()
-        instance.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    def destroy(self, request, id=None):
+        try:
+            student = self.get_object(id=id)
+        except Student.DoesNotExist:
+            return Response({"message": "Étudiant introuvable"}, status=status.HTTP_404_NOT_FOUND)
+
+        student.delete()
+        return Response({"message": "Étudiant supprimé avec succès"}, status=status.HTTP_204_NO_CONTENT)
