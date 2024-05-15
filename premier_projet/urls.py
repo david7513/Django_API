@@ -27,6 +27,6 @@ router.register(r'students', StudentViewSet, basename='student')
 # Inclure les URLs générées par le routeur dans urlpatterns
 urlpatterns = [
     path('', include(router.urls)),
-    path('students/<str:name>/', StudentViewSet.as_view({'get': 'search_by_name'}), name='student-search-by-name'),  # Inclure les URLs générées par le routeur
+    path('students/<str:name>/', StudentViewSet.as_view({'get': 'search_by_name'}), name='student-search-by-name'),# Inclure les URLs générées par le routeur
 ]
 
