@@ -3,6 +3,41 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from gestion_etudiants.models import Student
 
+from django.contrib.auth.models import User
+from rest_framework_jwt.settings import api_settings
+from rest_framework.test import APIClient
+from django.contrib.auth.models import User
+from django.test import TestCase
+
+class TestYourViewSet(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='password123')
+        self.client.login(username='testuser', password='password123')
+
+    def test_list_students(self):
+        url = '/your-api-endpoint/'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+
+class TestYourViewSet(TestCase):
+    def test_list_students(self):
+        url = '/your-api-endpoint/'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+class TestYourViewSet(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='password123')
+        payload = jwt_payload_handler(self.user)
+        self.token = jwt_encode_handler(payload)
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
+class TestYourViewSet(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='password123')
+
 
 class TestStudent(APITestCase):
 
