@@ -30,8 +30,8 @@ router.register(r'students', StudentViewSet, basename='student')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('api/token/', TokenObtainPairView.as_view(), name='obtain_tokens'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='refresh_token'),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/', include(router.urls)),
     path('', include(router.urls)),
     path('students/<str:name>/', StudentViewSet.as_view({'get': 'search_by_name'}), name='student-search-by-name'),# Inclure les URLs générées par le routeur
