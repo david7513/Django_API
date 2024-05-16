@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'gestion_etudiants',
     'rest_framework',
     'rest_framework.authtoken',
-    'rest_framework_jwt',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -128,7 +129,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS' : 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE' : 10,
-    'DEFAULT_AUTHENTIFICATION_CLASSES' : ('rest_framework_simplejwt.authentification.JWTAuthentification',)
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
 }
