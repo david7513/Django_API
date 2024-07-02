@@ -1,1 +1,1 @@
-# Django_API
+# Django_Students_API
